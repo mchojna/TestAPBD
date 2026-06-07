@@ -7,5 +7,5 @@ public class Department
     public string FacultyBuilding { get; set; } = null!;
     public decimal Budget { get; set; }
 
-    public ICollection<Professor> Professors { get; set; } = new List<Professor>();
+    public ICollection<Professor> Professors { get; set; } = [];
 }
