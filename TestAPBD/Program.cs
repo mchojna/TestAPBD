@@ -1,0 +1,27 @@
+using Microsoft.EntityFrameworkCore;
+using TestAPBD.Data;
+using TestAPBD.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddOpenApi();
+builder.Services.AddScoped<IAppDbService, AppDbService>();
+builder.Services.AddDbContext<AppDbContext>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwaggerUI(opt => { opt.SwaggerEndpoint("/openapi/v1.json", "v1"); });
+}
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
