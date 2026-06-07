@@ -49,7 +49,8 @@ public class AppDbService(AppDbContext appDbContext) : IAppDbService
                     }
                 }).ToList()
             }).ToList()
-        });
+        }); 
+        // TODO: Throw exception when result list is empty :) 
     }
 
     public async Task AddCourseAsync(AddCourseDto dto)
