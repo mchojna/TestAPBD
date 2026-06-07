@@ -5,5 +5,5 @@ namespace TestAPBD.Services;
 public interface IAppDbService
 {
     Task<IEnumerable<GetProfessorDto>> GetProfessorsAsync(string? lastName);
-    Task<int> AddCourseAsync(AddCourseDto dto);
+    Task AddCourseAsync(AddCourseDto dto);
 }

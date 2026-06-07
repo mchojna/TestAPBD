@@ -54,6 +54,39 @@ public class AppDbService(AppDbContext appDbContext) : IAppDbService
 
     public async Task AddCourseAsync(AddCourseDto dto)
     {
-        throw new NotImplementedException;
+        await using var transaction = await appDbContext.Database.BeginTransactionAsync();
+
+        var professor = await appDbContext.Professors
+                            .FirstOrDefaultAsync(p => p.LastName == dto.ProfessorsLastName)
+                        ?? throw new NotFoundException($"Professor '{dto.ProfessorsLastName}' not found.");
+
+        var course = new Course
+        {
+            Title = dto.Title,
+            Credits = dto.Credits,
+            Semester = dto.Semester,
+            ProfessorId = professor.ProfessorId
+        };
+
+        await appDbContext.Courses.AddAsync(course);
+        await appDbContext.SaveChangesAsync();
+
+        foreach (var studentId in dto.Students)
+        {
+            var studentExists = await appDbContext.Students.AnyAsync(s => s.StudentId == studentId);
+            if (!studentExists) throw new NotFoundException($"Student '{studentId}' not found.");
+
+            var enrollment = new Enrollment
+            {
+                CourseId = course.CourseId,
+                StudentId = studentId,
+                Status = "Enrolled"
+            };
+
+            await appDbContext.Enrollments.AddAsync(enrollment);
+        }
+
+        await appDbContext.SaveChangesAsync();
+        await transaction.CommitAsync();
     }
 }
