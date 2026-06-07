@@ -1,0 +1,58 @@
+@TestAPBD_HostAddress = http://localhost:5039
+
+### GET ALL PROFESSORS
+GET {{TestAPBD_HostAddress}}/api/professors
+
+### GET PROFESSOR BY LAST NAME
+GET {{TestAPBD_HostAddress}}/api/professors?lastname=Johnson
+
+### GET PROFESSOR BY 'LIKE' LAST NAME
+GET {{TestAPBD_HostAddress}}/api/professors?lastname=John
+
+### GET PROFESSOR BY 'LIKE' LAST NAME - NO MATCH
+GET {{TestAPBD_HostAddress}}/api/professors?lastname=Xyz
+
+### POST NEW COURSE
+POST {{TestAPBD_HostAddress}}/api/courses
+Content-Type: application/json
+
+{
+  "professorsLastName": "Johnson",
+  "title": "New Course",
+  "credits": 6,
+  "semester": 4,
+  "students": [
+    1,
+    3
+  ]
+}
+
+### POST NEW COURSE - WRONG PROFESSOR
+POST {{TestAPBD_HostAddress}}/api/courses
+Content-Type: application/json
+
+{
+  "professorsLastName": "Xyz",
+  "title": "New Course",
+  "credits": 6,
+  "semester": 4,
+  "students": [
+    1,
+    3
+  ]
+}
+
+### POST NEW COURSE - WRONG STUDENT
+POST {{TestAPBD_HostAddress}}/api/courses
+Content-Type: application/json
+
+{
+  "professorsLastName": "Johnson",
+  "title": "New Course",
+  "credits": 6,
+  "semester": 4,
+  "students": [
+    1,
+    999
+  ]
+}
